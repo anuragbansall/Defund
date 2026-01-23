@@ -11,3 +11,7 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}

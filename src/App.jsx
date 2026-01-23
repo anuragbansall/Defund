@@ -8,13 +8,11 @@ import WalletNotConnected from "./components/WalletNotConnected";
 import ViewCampaign from "./components/ViewCampaign";
 
 function App() {
-  const { wallet, setWallet, contract, setContract } =
-    useContext(WalletContext);
+  const { connectedAccount, isConnecting } = useContext(WalletContext);
 
-  // TODO: Uncomment when ready to test wallet connection flow
-  // if (!wallet) {
-  //   return <WalletNotConnected />;
-  // }
+  if (!connectedAccount || isConnecting) {
+    return <WalletNotConnected />;
+  }
 
   return (
     <Routes>

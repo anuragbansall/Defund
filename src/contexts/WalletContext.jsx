@@ -1,14 +1,39 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import connectToWallet from "../utils/connectToWallet";
 
 const WalletContext = createContext(null);
 
 function WalletProvider({ children }) {
-  const [wallet, setWallet] = useState(null);
+  const [connectedAccount, setConnectedAccount] = useState(null);
   const [contract, setContract] = useState(null);
+  const [owner, setOwner] = useState(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectError, setConnectError] = useState(null);
+
+  useEffect(() => {
+    connectToWallet(
+      setConnectedAccount,
+      setIsConnecting,
+      setConnectError,
+      setOwner,
+      setContract,
+    );
+  }, []);
 
   return (
     <WalletContext.Provider
-      value={{ wallet, setWallet, contract, setContract }}
+      value={{
+        connectedAccount,
+        setConnectedAccount,
+        contract,
+        setContract,
+        owner,
+        setOwner,
+        isConnecting,
+        setIsConnecting,
+        connectError,
+        setConnectError,
+      }}
     >
       {children}
     </WalletContext.Provider>

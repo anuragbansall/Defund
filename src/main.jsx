@@ -6,11 +6,9 @@ import { WalletProvider } from "./contexts/WalletContext.jsx";
 import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BrowserRouter>
-      <WalletProvider>
-        <App />
-      </WalletProvider>
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <WalletProvider>
+      <App />
+    </WalletProvider>
+  </BrowserRouter>,
 );

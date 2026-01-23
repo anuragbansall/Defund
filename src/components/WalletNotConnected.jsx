@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IoWallet } from "react-icons/io5";
+import connectToWallet from "../utils/connectToWallet";
+import { WalletContext } from "../contexts/WalletContext";
 
 function WalletNotConnected() {
+  const {
+    setConnectedAccount,
+    setIsConnecting,
+    isConnecting,
+    connectError,
+    setConnectError,
+    setOwner,
+    setContract,
+  } = useContext(WalletContext);
+
+  const handleConnectWallet = () => {
+    connectToWallet(
+      setConnectedAccount,
+      setIsConnecting,
+      setConnectError,
+      setOwner,
+      setContract,
+    );
+  };
+
   return (
     <main className="min-h-screen w-full bg-linear-to-br from-[#0B0B11] via-[#13131A] to-[#1A1A24] text-zinc-100 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
@@ -46,9 +68,15 @@ function WalletNotConnected() {
             <button
               type="button"
               className="primary-button mt-6 w-full items-center justify-center"
+              disabled={isConnecting}
+              onClick={handleConnectWallet}
             >
-              Connect Wallet
+              {isConnecting ? "Connecting..." : "Connect Wallet"}
             </button>
+
+            {connectError && (
+              <p className="mt-4 text-sm text-red-500">{connectError}</p>
+            )}
 
             <p className="mt-4 text-xs text-zinc-400">
               You can disconnect anytime from settings. For demo purposes, this
