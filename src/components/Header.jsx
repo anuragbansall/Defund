@@ -6,6 +6,7 @@ import { MdCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
 import connectToWallet from "../utils/connectToWallet";
 import formatAddress from "../utils/formatAddress";
+import Logo from "./Logo";
 
 function Header() {
   const {
@@ -31,12 +32,7 @@ function Header() {
   return (
     <header className="w-full border-b border-white/10 bg-[#0B0B11]/70 backdrop-blur-md text-zinc-100 px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <span className="inline-flex items-center justify-center rounded-xl bg-white/10 p-2 ring-1 ring-inset ring-white/15">
-          <SiHiveBlockchain
-            className="h-6 w-6 text-white/90"
-            aria-hidden="true"
-          />
-        </span>
+        <Logo />
         <div className="leading-tight">
           <span className="block text-lg font-semibold tracking-tight">
             Defund

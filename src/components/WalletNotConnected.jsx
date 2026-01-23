@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { IoWallet } from "react-icons/io5";
 import connectToWallet from "../utils/connectToWallet";
 import { WalletContext } from "../contexts/WalletContext";
+import Logo from "./Logo";
 
 function WalletNotConnected() {
   const {
@@ -37,8 +38,8 @@ function WalletNotConnected() {
           </div>
 
           <section className="px-8 pt-10 pb-8 text-center">
-            <div className="mx-auto mb-5 inline-flex items-center justify-center rounded-xl bg-white/10 p-3 ring-1 ring-inset ring-white/15 text-4xl">
-              <IoWallet />
+            <div className="flex items-center justify-center mb-4">
+              <Logo size={60} />
             </div>
 
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -80,7 +81,7 @@ function WalletNotConnected() {
 
             <p className="mt-4 text-xs text-zinc-400">
               You can disconnect anytime from settings. For demo purposes, this
-              simply simulates a connection.
+              app is set to connect to a testnet.
             </p>
           </section>
         </div>
