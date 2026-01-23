@@ -5,6 +5,7 @@ import { WalletContext } from "../contexts/WalletContext";
 import { MdCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
 import connectToWallet from "../utils/connectToWallet";
+import formatAddress from "../utils/formatAddress";
 
 function Header() {
   const {
@@ -14,6 +15,7 @@ function Header() {
     setConnectError,
     setOwner,
     setContract,
+    owner,
   } = useContext(WalletContext);
 
   const handleConnectWallet = () => {
@@ -45,27 +47,48 @@ function Header() {
         </div>
       </div>
 
-      {!connectedAccount ? (
-        <button
-          type="button"
-          aria-label="Connect wallet"
-          className="primary-button"
-          onClick={handleConnectWallet}
-        >
-          <IoWalletOutline className="h-5 w-5" aria-hidden="true" />
-          <span>Connect Wallet</span>
-        </button>
-      ) : (
-        <Link
-          to="/create-campaign"
-          type="button"
-          aria-label="Create campaign"
-          className="primary-button"
-        >
-          <MdCampaign className="h-5 w-5" aria-hidden="true" />
-          <span>Create Campaign</span>
-        </Link>
-      )}
+      <div className="flex items-center gap-4">
+        {connectedAccount && (
+          <div
+            className="hidden items-center rounded-full bg-green-100 px-3 py-1 text-xs text-gray-700 sm:flex"
+            title={connectedAccount}
+          >
+            <span className="mr-1 font-medium text-gray-600">User:</span>
+            <span className="font-mono">{formatAddress(connectedAccount)}</span>
+          </div>
+        )}
+        {owner && (
+          <div
+            className="hidden items-center rounded-full bg-green-100 px-3 py-1 text-xs text-gray-700 sm:flex"
+            title={owner}
+          >
+            <span className="mr-1 font-medium text-gray-600">Owner:</span>
+            <span className="font-mono">{formatAddress(owner)}</span>
+          </div>
+        )}
+
+        {!connectedAccount ? (
+          <button
+            type="button"
+            aria-label="Connect wallet"
+            className="primary-button"
+            onClick={handleConnectWallet}
+          >
+            <IoWalletOutline className="h-5 w-5" aria-hidden="true" />
+            <span>Connect Wallet</span>
+          </button>
+        ) : (
+          <Link
+            to="/create-campaign"
+            type="button"
+            aria-label="Create campaign"
+            className="primary-button"
+          >
+            <MdCampaign className="h-5 w-5" aria-hidden="true" />
+            <span>Create Campaign</span>
+          </Link>
+        )}
+      </div>
     </header>
   );
 }
