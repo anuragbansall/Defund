@@ -13,7 +13,7 @@ function MainApplication() {
           <Sidebar />
         </div>
 
-        <div className="grow h-full overflow-y-auto p-4">
+        <div className="grow h-full overflow-y-auto p-4 max-w-350 mx-auto ">
           <Outlet />
         </div>
       </main>

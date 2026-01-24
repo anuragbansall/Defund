@@ -1,9 +1,11 @@
 import React, { useContext, useMemo, useState } from "react";
 import { WalletContext } from "../contexts/WalletContext";
 import CampaignCard from "./CampaignCard";
+import { createCampaign } from "../utils/contractUtils";
+import { parseEther } from "ethers";
 
 function CreateCampaign() {
-  const { wallet } = useContext(WalletContext);
+  const { contract, connectedAccount } = useContext(WalletContext);
 
   const [form, setForm] = useState({
     title: "",
@@ -13,7 +15,9 @@ function CreateCampaign() {
     deadline: "",
     image: "",
   });
-  const [status, setStatus] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -38,10 +42,10 @@ function CreateCampaign() {
         "Describe the purpose, impact, and how funds will be used.",
       targetAmount: targetDisplay || "5 ETH",
       amountCollected: "0 ETH",
-      deadline: form.deadline || "YYYY-MM-DD",
-      owner: wallet || "0xYourWallet...",
+      deadline: form.deadline,
+      owner: connectedAccount || "0xYourWallet...",
     }),
-    [form, wallet, targetDisplay],
+    [form, connectedAccount, targetDisplay],
   );
 
   const isValid = Boolean(
@@ -51,28 +55,60 @@ function CreateCampaign() {
     form.deadline &&
     form.image,
   );
-  const canSubmit = Boolean(wallet) && isValid;
 
-  const handleSubmit = (e) => {
+  const canSubmit = Boolean(contract && connectedAccount) && isValid;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!wallet) {
-      setStatus({
-        type: "error",
-        message: "Connect your wallet to create a campaign.",
-      });
+    if (!contract || !connectedAccount) {
+      setError("Please connect your wallet to create a campaign.");
       return;
     }
     if (!isValid) {
-      setStatus({ type: "error", message: "Please fill all required fields." });
+      setError("Please fill all required fields.");
       return;
     }
-    setStatus({ type: "loading", message: "Creating campaign on-chain..." });
-    setTimeout(() => {
-      setStatus({
-        type: "success",
-        message: "Campaign created successfully (demo).",
+
+    if (isCreating) return; // Prevent multiple submissions
+
+    setError(null);
+    setSuccess(null);
+
+    try {
+      setIsCreating(true);
+      const deadlineTimestamp = new Date(form.deadline).getTime();
+
+      const success = await createCampaign(contract, {
+        owner: connectedAccount,
+        title: form.title,
+        description: form.description,
+        target: parseEther(form.targetAmount),
+        deadline: deadlineTimestamp,
+        image: form.image,
       });
-    }, 900);
+
+      if (success) {
+        setSuccess("Campaign created successfully!");
+
+        setForm({
+          title: "",
+          description: "",
+          category: "Education",
+          targetAmount: "",
+          deadline: "",
+          image: "",
+        });
+      } else {
+        setError("Failed to create campaign. Please try again.");
+        setIsCreating(false);
+      }
+    } catch (error) {
+      console.error("Error creating campaign:", error);
+      setError("Failed to create campaign. Please try again.");
+      setIsCreating(false);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -83,7 +119,8 @@ function CreateCampaign() {
             Create a Campaign
           </h1>
           <p className="mt-1 text-sm text-zinc-300">
-            Connect your wallet to continue and publish your campaign.
+            Connect your wallet and contract to continue and publish your
+            campaign.
           </p>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -126,6 +163,7 @@ function CreateCampaign() {
                   <option>Emergency</option>
                 </select>
               </div>
+
               <div>
                 <label className="text-xs text-zinc-400">Target (ETH)</label>
                 <input
@@ -139,6 +177,7 @@ function CreateCampaign() {
                   className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
                 />
               </div>
+
               <div>
                 <label className="text-xs text-zinc-400">Deadline</label>
                 <input
@@ -167,28 +206,18 @@ function CreateCampaign() {
 
             <button
               type="submit"
-              disabled={!canSubmit}
+              disabled={!canSubmit || isCreating}
               className="primary-button"
             >
-              Create Campaign
+              {isCreating ? "Creating..." : "Create Campaign"}
             </button>
 
-            {status && (
-              <div
-                className={
-                  `mt-3 rounded-lg px-3 py-2 text-xs ` +
-                  (status.type === "success"
-                    ? "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30"
-                    : status.type === "error"
-                      ? "bg-rose-500/15 text-rose-300 ring-1 ring-rose-400/30"
-                      : "bg-white/10 text-zinc-300 ring-1 ring-white/20")
-                }
-              >
-                {status.message}
-              </div>
+            {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
+            {success && (
+              <p className="mt-3 text-sm text-green-500">{success}</p>
             )}
 
-            {!wallet && (
+            {!connectedAccount && (
               <p className="mt-3 text-[11px] text-zinc-500">
                 Connect your wallet to continue. Your keys stay on your device;
                 no funds move without approval.
@@ -204,7 +233,8 @@ function CreateCampaign() {
           <p className="mt-1 text-xs text-zinc-400">
             See how your campaign card will look.
           </p>
-          <div className="mt-4 pointer-events-none">
+
+          <div className="pointer-events-none mt-2">
             <CampaignCard campaign={previewCampaign} />
           </div>
         </div>

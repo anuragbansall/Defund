@@ -22,6 +22,7 @@ function Sidebar() {
           <NavLink
             key={index}
             to={item.link}
+            title={item.name}
             className={({ isActive }) =>
               `flex items-center gap-3 ${isActive ? "text-[#17a05d] bg-zinc-300/10" : "text-zinc-300"} hover:bg-white/5 p-3 rounded-xl transition cursor-pointer`
             }

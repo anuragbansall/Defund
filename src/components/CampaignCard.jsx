@@ -1,6 +1,8 @@
 import React from "react";
+import { FaEthereum } from "react-icons/fa";
 import { FiClock, FiUser } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import formatAddress from "../utils/formatAddress";
 
 function CampaignCard({ campaign }) {
   const parseAmount = (v) => {
@@ -17,11 +19,15 @@ function CampaignCard({ campaign }) {
   const progressPct =
     target > 0 ? Math.min(100, Math.round((collected / target) * 100)) : 0;
 
+  const navigate = useNavigate();
+
   return (
-    <Link
-      to={`/campaign/${campaign.id}`}
+    <div
+      onClick={() =>
+        navigate(`/campaign/${campaign.id}`, { state: { campaign } })
+      }
       state={{ campaign }}
-      className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg transition hover:border-white/20 hover:shadow-xl"
+      className="cursor-pointer group relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg transition hover:border-white/20 hover:shadow-xl"
     >
       <div className="relative">
         <img
@@ -68,36 +74,47 @@ function CampaignCard({ campaign }) {
         </div>
 
         <div className="mt-4 grid grid-cols-3 gap-3 text-xs">
-          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300">
+          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300 flex flex-col justify-center">
             <div className="text-zinc-200 font-semibold">Target</div>
-            <div className="truncate">{campaign.targetAmount}</div>
+            <div className="truncate flex items-center gap-1 py-1">
+              <FaEthereum />
+              {campaign.targetAmount} ETH
+            </div>
           </div>
-          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300">
+          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300  flex flex-col justify-center">
             <div className="text-zinc-200 font-semibold">Collected</div>
-            <div className="truncate">{campaign.amountCollected}</div>
+            <div className="truncate flex items-center gap-1 py-1">
+              <FaEthereum />
+              {campaign.amountCollected} ETH
+            </div>
           </div>
-          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300">
+          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300  flex flex-col justify-center">
             <div className="flex items-center gap-1 text-zinc-200 font-semibold">
               <FiClock className="h-3.5 w-3.5" aria-hidden="true" />
               Deadline
             </div>
-            <div className="truncate">{campaign.deadline}</div>
+            <div className="truncate">
+              {new Date(campaign.deadline).toLocaleDateString()}
+            </div>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-3 text-sm text-zinc-300">
+        <div
+          className="mt-4 flex items-center gap-3 text-sm text-zinc-300"
+          title={campaign.owner}
+        >
           <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/10">
             <FiUser className="h-4 w-4 text-white/80" aria-hidden="true" />
           </div>
           <div>
             <div className="text-zinc-200 font-semibold">Owner</div>
             <div className="truncate text-xs text-zinc-400">
-              {campaign.owner}
+              {formatAddress(campaign.owner)}
             </div>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

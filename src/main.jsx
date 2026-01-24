@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App.jsx";
 import { WalletProvider } from "./contexts/WalletContext.jsx";
 import { BrowserRouter } from "react-router-dom";
+import { CampaignsProvider } from "./contexts/CampaignsContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <WalletProvider>
-      <App />
+      <CampaignsProvider>
+        <App />
+      </CampaignsProvider>
     </WalletProvider>
   </BrowserRouter>,
 );
