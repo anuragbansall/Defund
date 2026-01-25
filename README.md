@@ -63,6 +63,23 @@ Defund is a non‑custodial, decentralized crowdfunding platform. Campaigns are 
 
 ---
 
+## Architecture
+
+```
+React (Vite) ───────────▶ MetaMask ───────────▶ Ethereum (Sepolia)
+   │                         ▲                         ▲
+   │                         │                         │
+   │    POST /enhance-campaign│                         │
+   ├──────────▶ Cloudflare Worker (AI)                  │
+   │                                                 Read/Write
+   │                              ───────────▶ Defund Smart Contract
+   │
+   ├──────────▶ CoinGecko (ETH price, INR conversion)
+   └──────────▶ Unsplash (campaign images)
+```
+
+---
+
 ## Prerequisites
 
 - Node.js 18+ and npm
@@ -141,12 +158,112 @@ The app expects MetaMask to be available in the browser and your network set to 
 
 ---
 
+## Contract Interface (Frontend)
+
+Core functions used by the client:
+
+- `getCampaigns` — fetches all campaigns (owner, title, description, target, deadline, amountCollected, image)
+- `createCampaign` — creates a new campaign (writes on-chain)
+- `donateToCampaign` — funds a campaign with ETH
+- `getDonators` — returns donors and donation amounts for a given campaign
+- `numberOfCampaigns` — returns total count
+
+Implementation references:
+
+- Connect and ABI: [client/src/utils/connectToWallet.js](client/src/utils/connectToWallet.js)
+- Contract helpers: [client/src/utils/contractUtils.js](client/src/utils/contractUtils.js)
+
+---
+
 ## AI Helper
 
 The Create Campaign page includes an AI button that augments your inputs to be more compelling. This is served by a Cloudflare Worker (see `ai-worker/`). If you run your own worker:
 
 1. Deploy with Wrangler to your Cloudflare account.
 2. Update the base URL in `src/api/aiWorkerInstance.js` to point at your worker domain.
+
+---
+
+## AI Worker API
+
+- Base: your Cloudflare Worker (e.g., `https://ai-worker.defund-ai.workers.dev`)
+- Endpoint: `POST /enhance-campaign`
+- Request (JSON):
+
+```json
+{
+  "title": "...",
+  "description": "...",
+  "category": "General",
+  "targetEth": 1.5,
+  "deadline": "2026-02-28T00:00:00.000Z"
+}
+```
+
+- Response (JSON):
+
+```json
+{
+  "enhancedTitle": "...",
+  "enhancedDescription": "..."
+}
+```
+
+- Status codes: `200` (OK), `400` (invalid body), `404` (unknown path), `405` (method not allowed), `500/503` (service unavailable/config error)
+- CORS: Enabled for `POST, OPTIONS` with `Access-Control-Allow-Origin: *`
+
+Source: [ai-worker/src/index.js](ai-worker/src/index.js)
+
+---
+
+## AI Worker: Development & Deployment
+
+From the `ai-worker` directory:
+
+```bash
+npm install
+# Set secret for Groq API key (do not commit secrets)
+wrangler secret put GROQ_API_KEY
+
+# Local dev
+npm run dev
+
+# Deploy
+npm run deploy
+```
+
+Optional local `.dev.vars` can store non-sensitive dev values. Update the client base URL in [client/src/api/aiWorkerInstance.js](client/src/api/aiWorkerInstance.js) after deployment if your domain changes.
+
+---
+
+## Full-Stack Development
+
+Run the worker and client in separate terminals:
+
+```bash
+# Terminal 1: AI Worker
+cd ai-worker
+npm install
+npm run dev
+
+# Terminal 2: Client
+cd client
+npm install
+npm run dev
+```
+
+Ensure MetaMask is on Sepolia. Set env variables in `client/.env` before starting.
+
+---
+
+## Troubleshooting
+
+- MetaMask not installed: Install the extension and refresh the page.
+- Wrong network: Switch MetaMask to Sepolia; reconnect wallet.
+- Pending request: MetaMask may show `-32002`; cancel the pending request or wait, then retry.
+- User rejected request: Error `4001`; re-initiate connect and approve.
+- No campaigns visible: Verify `VITE_CONTRACT_ADDRESS` points to a valid deployed contract.
+- AI helper errors: Confirm the worker is running and `GROQ_API_KEY` is set via Wrangler secrets.
 
 ---
 
