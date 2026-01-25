@@ -1,18 +1,24 @@
-// import { createClient } from "pexels";
-
-// const client = createClient(import.meta.env.VITE_PEXELS_API_KEY);
+import unsplashInstance from "../api/unsplashInstance";
 
 const findPhoto = async (query) => {
-  // try {
-  // const photos = await client.photos.search({ query, per_page: 1 });
+  try {
+    const response = await unsplashInstance.get("/search/photos", {
+      params: {
+        query,
+        page: 1,
+        per_page: 10,
+      },
+    });
 
-  // return photos.photos[0].src.original;
+    const image = response.data?.results[0]?.urls.small_s3;
 
-  return "https://t4.ftcdn.net/jpg/04/39/89/01/360_F_439890152_sYbPxa1ANTSKcZuUsKzRAf9O7bJ1Tx5B.jpg";
-  // } catch (error) {
-  // console.error("Error fetching photo from Pexels:", error);
-  // throw error;
-  // }
+    console.log("Found image URL:", image);
+
+    return image;
+  } catch (error) {
+    console.error("Error fetching photo from Unsplash:", error);
+    throw error;
+  }
 };
 
 export default findPhoto;

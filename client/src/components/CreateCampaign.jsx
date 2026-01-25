@@ -5,7 +5,6 @@ import { createCampaign } from "../utils/contractUtils";
 import { parseEther } from "ethers";
 import { GiArtificialIntelligence } from "react-icons/gi";
 import aiWorkerInstance from "../api/aiWorkerInstance";
-import unsplashInstance from "../api/unsplashInstance";
 import findPhoto from "../utils/findPhoto";
 
 function CreateCampaign() {
@@ -40,9 +39,7 @@ function CreateCampaign() {
   const previewCampaign = useMemo(
     () => ({
       id: 0,
-      image:
-        form.image ||
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop",
+      image: form.image || "/img-placeholder-dark.jpg",
       category: form.category || "General",
       title: form.title || "Your campaign title",
       description:
