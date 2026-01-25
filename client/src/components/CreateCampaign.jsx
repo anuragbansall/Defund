@@ -1,10 +1,12 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { WalletContext } from "../contexts/WalletContext";
 import CampaignCard from "./CampaignCard";
 import { createCampaign } from "../utils/contractUtils";
 import { parseEther } from "ethers";
 import { GiArtificialIntelligence } from "react-icons/gi";
 import aiWorkerInstance from "../api/aiWorkerInstance";
+import unsplashInstance from "../api/unsplashInstance";
+import findPhoto from "../utils/findPhoto";
 
 function CreateCampaign() {
   const { contract, connectedAccount } = useContext(WalletContext);
@@ -16,6 +18,7 @@ function CreateCampaign() {
     targetAmount: "",
     deadline: "",
     image: "",
+    imageKeyword: "",
   });
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState(null);
@@ -24,6 +27,10 @@ function CreateCampaign() {
   const [isAIMakingImpactful, setIsAIMakingImpactful] = useState(false);
   const [aiError, setAIError] = useState(null);
   const [aiSuccess, setAISuccess] = useState(null);
+
+  const [isFindingImage, setIsFindingImage] = useState(false);
+  const [findImageError, setFindImageError] = useState(null);
+  const [findImageSuccess, setFindImageSuccess] = useState(null);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -98,6 +105,7 @@ function CreateCampaign() {
           targetAmount: "",
           deadline: "",
           image: "",
+          imageKeyword: "",
         });
       } else {
         setError("Failed to create campaign. Please try again.");
@@ -152,6 +160,31 @@ function CreateCampaign() {
       setIsAIMakingImpactful(false);
     } finally {
       setIsAIMakingImpactful(false);
+    }
+  };
+
+  const handleFindImage = async (keyword) => {
+    try {
+      if (isFindingImage) return;
+
+      setIsFindingImage(true);
+      setFindImageError(null);
+      setFindImageSuccess(null);
+
+      const image = await findPhoto(keyword);
+
+      if (image) {
+        setForm((f) => ({ ...f, image }));
+        setFindImageSuccess("Image found and set successfully!");
+      } else {
+        setFindImageError("No image found for the given keyword.");
+      }
+    } catch (error) {
+      console.error("Find image error:", error);
+      setFindImageError("Failed to find image. Please try again.");
+      setIsFindingImage(false);
+    } finally {
+      setIsFindingImage(false);
     }
   };
 
@@ -234,18 +267,31 @@ function CreateCampaign() {
               </div>
             </div>
 
-            <div>
-              <label className="text-xs text-zinc-400">Image URL</label>
-              <input
-                name="image"
-                value={form.image}
-                onChange={onChange}
-                placeholder="https://..."
-                className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
-              />
-              <p className="mt-1 text-[11px] text-zinc-500">
-                Use a high-quality image to increase trust and engagement.
-              </p>
+            <div className="flex flex-col md:flex-row gap-2 w-full items-center">
+              <div className="flex-1">
+                <label className="text-xs text-zinc-400">Image URL</label>
+                <input
+                  name="image"
+                  value={form.image}
+                  onChange={onChange}
+                  placeholder="https://..."
+                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                />
+              </div>
+
+              <div className="flex-1">
+                <label className="text-xs text-zinc-400">
+                  {" "}
+                  Find Image by Keyword
+                </label>
+                <input
+                  name="imageKeyword"
+                  value={form.imageKeyword}
+                  onChange={onChange}
+                  placeholder="Search image keyword..."
+                  className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-4 mt-4">
@@ -268,6 +314,20 @@ function CreateCampaign() {
                   ? " Enhancing..."
                   : " AI Make it Impactful"}
               </button>
+
+              <button
+                type="button"
+                disabled={
+                  !form.imageKeyword ||
+                  isFindingImage ||
+                  isAIMakingImpactful ||
+                  isCreating
+                }
+                className="primary-button"
+                onClick={() => handleFindImage(form.imageKeyword)}
+              >
+                {isFindingImage ? "Finding..." : " Find Image"}
+              </button>
             </div>
 
             {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
@@ -285,6 +345,14 @@ function CreateCampaign() {
                 Connect your wallet to continue. Your keys stay on your device;
                 no funds move without approval.
               </p>
+            )}
+
+            {findImageError && (
+              <p className="mt-3 text-sm text-red-500">{findImageError}</p>
+            )}
+
+            {findImageSuccess && (
+              <p className="mt-3 text-sm text-green-500">{findImageSuccess}</p>
             )}
           </form>
         </div>
