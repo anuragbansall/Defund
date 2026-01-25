@@ -3,6 +3,8 @@ import { WalletContext } from "../contexts/WalletContext";
 import CampaignCard from "./CampaignCard";
 import { createCampaign } from "../utils/contractUtils";
 import { parseEther } from "ethers";
+import { GiArtificialIntelligence } from "react-icons/gi";
+import aiWorkerInstance from "../api/aiWorkerInstance";
 
 function CreateCampaign() {
   const { contract, connectedAccount } = useContext(WalletContext);
@@ -19,15 +21,14 @@ function CreateCampaign() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  const [isAIMakingImpactful, setIsAIMakingImpactful] = useState(false);
+  const [aiError, setAIError] = useState(null);
+  const [aiSuccess, setAISuccess] = useState(null);
+
   const onChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
-
-  const targetDisplay = useMemo(() => {
-    const n = parseFloat(form.targetAmount);
-    return isNaN(n) || n <= 0 ? "" : `${n} ETH`;
-  }, [form.targetAmount]);
 
   const previewCampaign = useMemo(
     () => ({
@@ -40,18 +41,18 @@ function CreateCampaign() {
       description:
         form.description ||
         "Describe the purpose, impact, and how funds will be used.",
-      targetAmount: targetDisplay || "5 ETH",
-      amountCollected: "0 ETH",
+      targetAmount: form.targetAmount || "5 ETH",
+      amountCollected: "0",
       deadline: form.deadline,
       owner: connectedAccount || "0xYourWallet...",
     }),
-    [form, connectedAccount, targetDisplay],
+    [form, connectedAccount],
   );
 
   const isValid = Boolean(
     form.title &&
     form.description &&
-    targetDisplay &&
+    form.targetAmount &&
     form.deadline &&
     form.image,
   );
@@ -69,7 +70,7 @@ function CreateCampaign() {
       return;
     }
 
-    if (isCreating) return; // Prevent multiple submissions
+    if (isCreating || isAIMakingImpactful) return; // Prevent multiple submissions
 
     setError(null);
     setSuccess(null);
@@ -108,6 +109,49 @@ function CreateCampaign() {
       setIsCreating(false);
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const handleAIMakeImpactful = async () => {
+    if (isAIMakingImpactful) return; // Prevent multiple clicks
+
+    setAIError(null);
+    setAISuccess(null);
+
+    try {
+      const data = {
+        title: form.title,
+        description: form.description,
+        category: form.category,
+        targetEth: form.targetAmount,
+        deadline: form.deadline,
+      };
+
+      setIsAIMakingImpactful(true);
+
+      const response = await aiWorkerInstance.post("/enhance-campaign", data);
+
+      console.log("AI enhancement response:", response);
+
+      if (response.data) {
+        const { enhancedTitle, enhancedDescription } = response.data;
+
+        setForm((f) => ({
+          ...f,
+          title: enhancedTitle || f.title,
+          description: enhancedDescription || f.description,
+        }));
+
+        setAISuccess("Campaign content enhanced successfully!");
+      } else {
+        setAIError("Failed to enhance campaign content. Please try again.");
+      }
+    } catch (error) {
+      console.error("AI enhancement error:", error);
+      setAIError("Failed to enhance campaign content. Please try again.");
+      setIsAIMakingImpactful(false);
+    } finally {
+      setIsAIMakingImpactful(false);
     }
   };
 
@@ -204,17 +248,36 @@ function CreateCampaign() {
               </p>
             </div>
 
-            <button
-              type="submit"
-              disabled={!canSubmit || isCreating}
-              className="primary-button"
-            >
-              {isCreating ? "Creating..." : "Create Campaign"}
-            </button>
+            <div className="flex items-center gap-4 mt-4">
+              <button
+                type="submit"
+                disabled={!canSubmit || isCreating || isAIMakingImpactful}
+                className="primary-button"
+              >
+                {isCreating ? "Creating..." : "Create Campaign"}
+              </button>
+
+              <button
+                type="button"
+                disabled={!canSubmit || isCreating || isAIMakingImpactful}
+                className="primary-button"
+                onClick={handleAIMakeImpactful}
+              >
+                <GiArtificialIntelligence />
+                {isAIMakingImpactful
+                  ? " Enhancing..."
+                  : " AI Make it Impactful"}
+              </button>
+            </div>
 
             {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
             {success && (
               <p className="mt-3 text-sm text-green-500">{success}</p>
+            )}
+
+            {aiError && <p className="mt-3 text-sm text-red-500">{aiError}</p>}
+            {aiSuccess && (
+              <p className="mt-3 text-sm text-green-500">{aiSuccess}</p>
             )}
 
             {!connectedAccount && (

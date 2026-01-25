@@ -96,12 +96,16 @@ function ViewCampaign() {
 
       <section className="flex flex-col md:flex-row w-full h-full justify-between gap-6 md:gap-8">
         {/* Left Column */}
-        <div className="flex flex-col grow shrink-0">
+        <div className="flex flex-col grow">
           <div className="relative h-48 sm:h-56 md:min-h-60 w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
             <img
               src={campaign.image}
               alt={campaign.title}
               className="h-full w-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/img-placeholder-dark.jpg";
+              }}
             />
             <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent" />
             <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs text-white ring-1 ring-white/20 backdrop-blur">
@@ -192,7 +196,7 @@ function ViewCampaign() {
         </div>
 
         {/* Right Column */}
-        <aside className="grow h-auto md:h-full bg-green-900/5 mt-6 md:mt-0 shrink-0 md:max-w-100">
+        <aside className="w-200 h-auto md:h-full bg-green-900/5 mt-6 md:mt-0 shrink-0 md:max-w-100">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md h-full flex flex-col gap-2">
             <h2 className="text-2xl font-semibold text-zinc-100">
               Fund this campaign

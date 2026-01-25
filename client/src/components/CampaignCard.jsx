@@ -33,6 +33,10 @@ function CampaignCard({ campaign }) {
         <img
           src={campaign.image}
           alt={campaign.title}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/img-placeholder-dark.jpg";
+          }}
           className="h-52 w-full object-cover"
         />
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/50 via-black/20 to-transparent opacity-90" />
@@ -47,7 +51,7 @@ function CampaignCard({ campaign }) {
         <h2 className="text-lg font-semibold tracking-tight text-zinc-100">
           {campaign.title}
         </h2>
-        <p className="mt-1 text-sm text-zinc-300 line-clamp-3">
+        <p className="mt-1 text-sm text-zinc-300 line-clamp-1">
           {campaign.description}
         </p>
 
