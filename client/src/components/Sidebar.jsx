@@ -1,4 +1,5 @@
 import React from "react";
+import { FaEthereum } from "react-icons/fa";
 import { MdCampaign, MdSpaceDashboard } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
@@ -13,6 +14,11 @@ function Sidebar() {
       name: "Create Campaign",
       icon: <MdCampaign />,
       link: "/create-campaign",
+    },
+    {
+      name: "Ethereum Page",
+      icon: <FaEthereum />,
+      link: "/ethereum",
     },
   ];
   return (

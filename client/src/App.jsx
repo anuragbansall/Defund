@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard";
 import CreateCampaign from "./components/CreateCampaign";
 import WalletNotConnected from "./components/WalletNotConnected";
 import ViewCampaign from "./components/ViewCampaign";
+import EthereumPage from "./components/EthereumPage";
 
 function App() {
   const { connectedAccount, isConnecting } = useContext(WalletContext);
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/create-campaign" element={<CreateCampaign />} />
         <Route path="/campaign/:id" element={<ViewCampaign />} />
+        <Route path="/ethereum" element={<EthereumPage />} />
       </Route>
     </Routes>
   );
