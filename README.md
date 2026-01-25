@@ -1,6 +1,6 @@
 <div align="center">
 
-   <img src="./public/logo.png" alt="Defund Logo" height="96" />
+   <img src="/client/public/logo.png" alt="Defund Logo" height="96" />
 
    <h1>Defund — Decentralized Crowdfunding on Ethereum (Sepolia)</h1>
    <p>
@@ -34,18 +34,18 @@ Defund is a non‑custodial, decentralized crowdfunding platform. Campaigns are 
 <table>
    <tr>
       <td align="center">
-         <img src="./public/demo/dashboard.png" alt="Dashboard" width="480" /><br />Dashboard — browse active campaigns
+         <img src="/client/public/demo/dashboard.png" alt="Dashboard" width="480" /><br />Dashboard — browse active campaigns
       </td>
       <td align="center">
-         <img src="./public/demo/view-campaign.png" alt="View Campaign" width="480" /><br />Campaign details — fund with MetaMask
+         <img src="/client/public/demo/view-campaign.png" alt="View Campaign" width="480" /><br />Campaign details — fund with MetaMask
       </td>
    </tr>
    <tr>
       <td align="center">
-         <img src="./public/demo/create-campaign.png" alt="Create Campaign" width="480" /><br />Create campaign — AI enhances content
+         <img src="/client/public/demo/create-campaign.png" alt="Create Campaign" width="480" /><br />Create campaign — AI enhances content
       </td>
       <td align="center">
-         <img src="./public/demo/ethereum.png" alt="Ethereum Page" width="480" /><br />ETH price chart — convert ETH ↔ INR
+         <img src="/client/public/demo/ethereum.png" alt="Ethereum Page" width="480" /><br />ETH price chart — convert ETH ↔ INR
       </td>
    </tr>
 </table>
