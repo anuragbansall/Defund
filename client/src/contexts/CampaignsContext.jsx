@@ -6,16 +6,19 @@ const CampaignsContext = createContext([]);
 
 function CampaignsProvider({ children }) {
   const [campaigns, setCampaigns] = useState([]);
-  const [CampaignsLoading, setCampaignsLoading] = useState(true);
-  const [CampaignsError, setCampaignsError] = useState(null);
+  const [campaignsLoading, setCampaignsLoading] = useState(true);
+  const [campaignsError, setCampaignsError] = useState(null);
 
-  const { contract } = useContext(WalletContext); // Ensure you have access to the contract context
+  const { contract } = useContext(WalletContext);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
       setCampaignsLoading(true);
+      setCampaignsError(null);
+
       try {
         const campaignsData = await getCampaigns(contract);
+
         setCampaigns(campaignsData);
       } catch (err) {
         setCampaignsError(err);
@@ -31,7 +34,7 @@ function CampaignsProvider({ children }) {
 
   return (
     <CampaignsContext.Provider
-      value={{ campaigns, setCampaigns, CampaignsLoading, CampaignsError }}
+      value={{ campaigns, setCampaigns, campaignsLoading, campaignsError }}
     >
       {children}
     </CampaignsContext.Provider>

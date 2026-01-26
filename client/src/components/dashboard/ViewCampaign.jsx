@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import { FiClock, FiUser } from "react-icons/fi";
-import { WalletContext } from "../contexts/WalletContext";
-import { donateToCampaign } from "../utils/contractUtils";
+import { WalletContext } from "../../contexts/WalletContext";
+import { donateToCampaign } from "../../utils/contractUtils";
 import Confetti from "react-confetti";
 import { FaEthereum } from "react-icons/fa";
 

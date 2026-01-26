@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import EthereumPriceChart from "./EthereumPriceChart";
-import { convertEthToInr, convertInrToEth } from "../utils/getEthPrice";
+import { convertEthToInr, convertInrToEth } from "../../utils/getEthPrice";
 
 function EthereumPage() {
   const [ethAmount, setEthAmount] = useState("");

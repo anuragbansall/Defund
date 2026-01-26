@@ -2,7 +2,7 @@ import React from "react";
 import { FaEthereum } from "react-icons/fa";
 import { FiClock, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import formatAddress from "../utils/formatAddress";
+import formatAddress from "../../utils/formatAddress";
 
 function CampaignCard({ campaign }) {
   const parseAmount = (v) => {

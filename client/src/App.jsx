@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { WalletContext } from "./contexts/WalletContext";
-import MainApplication from "./components/MainApplication";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import CreateCampaign from "./components/CreateCampaign";
-import WalletNotConnected from "./components/WalletNotConnected";
-import ViewCampaign from "./components/ViewCampaign";
-import EthereumPage from "./components/EthereumPage";
 import { Analytics } from "@vercel/analytics/react";
+import MainApplication from "./components/common/MainApplication";
+import Dashboard from "./components/dashboard/Dashboard";
+import CreateCampaign from "./components/createCampaign/CreateCampaign";
+import ViewCampaign from "./components/dashboard/ViewCampaign";
+import EthereumPage from "./components/ethereum/EthereumPage";
+import WalletNotConnected from "./components/common/WalletNotConnected";
 
 function App() {
   const { connectedAccount, isConnecting } = useContext(WalletContext);

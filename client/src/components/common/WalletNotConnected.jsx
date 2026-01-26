@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { IoWallet } from "react-icons/io5";
-import connectToWallet from "../utils/connectToWallet";
-import { WalletContext } from "../contexts/WalletContext";
+import connectToWallet from "../../utils/connectToWallet";
+import { WalletContext } from "../../contexts/WalletContext";
 import Logo from "./Logo";
 
 function WalletNotConnected() {
@@ -15,14 +15,21 @@ function WalletNotConnected() {
     setContract,
   } = useContext(WalletContext);
 
-  const handleConnectWallet = () => {
-    connectToWallet(
-      setConnectedAccount,
-      setIsConnecting,
-      setConnectError,
-      setOwner,
-      setContract,
-    );
+  const handleConnectWallet = async () => {
+    setIsConnecting(true);
+    setConnectError(null);
+
+    try {
+      const { address, contract } = await connectToWallet();
+      setConnectedAccount(address);
+      setContract(contract);
+      const ownerAddress = await contract.owner();
+      setOwner(ownerAddress);
+      setIsConnecting(false);
+    } catch (error) {
+      setConnectError(error.message);
+      setIsConnecting(false);
+    }
   };
 
   return (

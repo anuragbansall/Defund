@@ -3,22 +3,16 @@ import DefundABI from "../contracts/DefundABI";
 
 const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
 
-const connectToWallet = async (
-  setConnectedAccount,
-  setIsConnecting,
-  setConnectError,
-  setOwner,
-  setContract,
-) => {
+const connectToWallet = async () => {
   if (!window.ethereum) {
-    setConnectError("MetaMask is not installed.");
-    return null;
+    console.error("MetaMask is not installed.");
+
+    throw new Error(
+      "MetaMask is not installed. Please install it to use this app.",
+    );
   }
 
   try {
-    setIsConnecting(true);
-    setConnectError(null);
-
     const provider = new ethers.BrowserProvider(window.ethereum);
 
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -26,26 +20,21 @@ const connectToWallet = async (
     const signer = await provider.getSigner();
     const address = await signer.getAddress();
 
-    setConnectedAccount(address);
-    setIsConnecting(false);
-
     const contract = new ethers.Contract(contractAddress, DefundABI, signer);
-    setContract(contract);
 
-    return address;
+    return { address, contract };
   } catch (error) {
     console.error("Error connecting to wallet:", error);
+
     if (error.code === 4001) {
-      setConnectError("Connection request was rejected by the user.");
+      throw new Error("Connection request was rejected by the user.");
     } else if (error.code === -32002) {
-      setConnectError("A connection request is already pending.");
+      throw new Error(
+        "A connection request is already pending. Please check MetaMask.",
+      );
     } else {
-      setConnectError("An error occurred while connecting to MetaMask.");
+      throw new Error("An unexpected error occurred. Please try again.");
     }
-
-    setIsConnecting(false);
-
-    return null;
   }
 };
 

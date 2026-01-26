@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { WalletContext } from "../contexts/WalletContext";
-import CampaignCard from "./CampaignCard";
-import { createCampaign } from "../utils/contractUtils";
+import React, { useContext, useMemo, useState } from "react";
+import { WalletContext } from "../../contexts/WalletContext";
+import { createCampaign } from "../../utils/contractUtils";
 import { parseEther } from "ethers";
 import { GiArtificialIntelligence } from "react-icons/gi";
-import aiWorkerInstance from "../api/aiWorkerInstance";
-import findPhoto from "../utils/findPhoto";
+import aiWorkerInstance from "../../api/aiWorkerInstance";
+import findPhoto from "../../utils/findPhoto";
+import CampaignCard from "../common/CampaignCard";
 
 function CreateCampaign() {
   const { contract, connectedAccount } = useContext(WalletContext);

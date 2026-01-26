@@ -11,13 +11,25 @@ function WalletProvider({ children }) {
   const [connectError, setConnectError] = useState(null);
 
   useEffect(() => {
-    connectToWallet(
-      setConnectedAccount,
-      setIsConnecting,
-      setConnectError,
-      setOwner,
-      setContract,
-    );
+    const initializeWalletConnection = async () => {
+      setIsConnecting(true);
+      setConnectError(null);
+
+      try {
+        const { address, contract } = await connectToWallet();
+        setConnectedAccount(address);
+        setContract(contract);
+
+        const ownerAddress = await contract.owner();
+        setOwner(ownerAddress);
+      } catch (error) {
+        setConnectError(error.message);
+      } finally {
+        setIsConnecting(false);
+      }
+    };
+
+    initializeWalletConnection();
   }, []);
 
   return (

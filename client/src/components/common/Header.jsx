@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import { SiHiveBlockchain } from "react-icons/si";
 import { IoWalletOutline } from "react-icons/io5";
-import { WalletContext } from "../contexts/WalletContext";
+import { WalletContext } from "../../contexts/WalletContext";
 import { MdCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
-import connectToWallet from "../utils/connectToWallet";
-import formatAddress from "../utils/formatAddress";
+import connectToWallet from "../../utils/connectToWallet";
+import formatAddress from "../../utils/formatAddress";
 import Logo from "./Logo";
 
 function Header() {
@@ -19,14 +18,21 @@ function Header() {
     owner,
   } = useContext(WalletContext);
 
-  const handleConnectWallet = () => {
-    connectToWallet(
-      setConnectedAccount,
-      setIsConnecting,
-      setConnectError,
-      setOwner,
-      setContract,
-    );
+  const handleConnectWallet = async () => {
+    setIsConnecting(true);
+    setConnectError(null);
+
+    try {
+      const { address, contract } = await connectToWallet();
+      setConnectedAccount(address);
+      setContract(contract);
+      const ownerAddress = await contract.owner();
+      setOwner(ownerAddress);
+      setIsConnecting(false);
+    } catch (error) {
+      setConnectError(error.message);
+      setIsConnecting(false);
+    }
   };
 
   return (
