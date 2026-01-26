@@ -33,7 +33,7 @@ function WalletNotConnected() {
   };
 
   return (
-    <main className="min-h-screen w-full bg-linear-to-br from-[#0B0B11] via-[#13131A] to-[#1A1A24] text-zinc-100 flex items-center justify-center p-6">
+    <main className="h-full w-full text-zinc-100 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
           <div

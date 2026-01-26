@@ -7,24 +7,39 @@ import Dashboard from "./components/dashboard/Dashboard";
 import CreateCampaign from "./components/createCampaign/CreateCampaign";
 import ViewCampaign from "./components/dashboard/ViewCampaign";
 import EthereumPage from "./components/ethereum/EthereumPage";
-import WalletNotConnected from "./components/common/WalletNotConnected";
 import Home from "./components/home/Home";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
-  const { connectedAccount, isConnecting } = useContext(WalletContext);
-
-  if (!connectedAccount || isConnecting) {
-    return <WalletNotConnected />;
-  }
-
   return (
     <>
       <Routes>
         <Route path="/" element={<MainApplication />}>
           <Route index element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-campaign" element={<CreateCampaign />} />
-          <Route path="/campaign/:id" element={<ViewCampaign />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-campaign"
+            element={
+              <ProtectedRoute>
+                <CreateCampaign />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/campaign/:id"
+            element={
+              <ProtectedRoute>
+                <ViewCampaign />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/ethereum" element={<EthereumPage />} />
         </Route>
       </Routes>
