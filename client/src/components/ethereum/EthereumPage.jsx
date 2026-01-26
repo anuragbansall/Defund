@@ -8,6 +8,7 @@ function EthereumPage() {
 
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState(null);
+  const [chartError, setChartError] = useState(null);
 
   const handleEthChange = async (e) => {
     const ethValue = e.target.value;
@@ -50,10 +51,15 @@ function EthereumPage() {
 
   return (
     <main className="md:p-6 w-full h-full">
-      <h1 className="text-3xl font-bold mb-6">Ethereum Price Chart</h1>
-      <section className="mb-8 w-full bg-zinc-800/20 rounded-lg">
-        <EthereumPriceChart />
-      </section>
+      {!chartError && (
+        <>
+          <h1 className="text-3xl font-bold mb-6">Ethereum Price Chart</h1>
+          <section className="mb-8 w-full bg-zinc-800/20 rounded-lg">
+            <EthereumPriceChart handleError={(msg) => setChartError(msg)} />
+            {chartError && <p className="mt-4 text-red-500">{chartError}</p>}
+          </section>
+        </>
+      )}
 
       <h2 className="text-2xl font-semibold mb-4">Convert ETH to INR</h2>
       <section className="w-full bg-zinc-800/20 rounded-lg p-4">
@@ -100,6 +106,8 @@ function EthereumPage() {
           >
             {isConverting ? "Converting..." : "Convert Amount"}
           </button>
+
+          {error && <p className="mt-4 text-red-500">{error}</p>}
         </form>
       </section>
     </main>

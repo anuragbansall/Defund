@@ -37,7 +37,7 @@ function Header() {
 
   return (
     <header className="w-full border-b border-white/10 bg-[#0B0B11]/70 backdrop-blur-md text-zinc-100 px-6 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+      <Link className="flex items-center gap-3" to="/">
         <Logo />
         <div className="leading-tight">
           <span className="block text-lg font-semibold tracking-tight">
@@ -47,7 +47,7 @@ function Header() {
             Secure, non-custodial by design
           </span>
         </div>
-      </div>
+      </Link>
 
       <div className="flex items-center gap-4">
         {connectedAccount && (

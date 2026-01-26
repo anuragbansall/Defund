@@ -21,6 +21,7 @@ function Sidebar() {
       link: "/ethereum",
     },
   ];
+
   return (
     <div className="h-full w-fit">
       <div className="bg-[#1C1C24] p-3 rounded-2xl flex flex-col gap-4 h-full">

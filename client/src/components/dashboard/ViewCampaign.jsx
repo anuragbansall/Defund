@@ -13,19 +13,9 @@ function ViewCampaign() {
 
   const campaign = location.state?.campaign || null;
 
-  console.log("Viewing campaign:", campaign);
+  const target = campaign?.targetAmount;
+  const collected = campaign?.amountCollected;
 
-  const parseAmount = (v) => {
-    if (typeof v === "string") {
-      const n = parseFloat(v.replace(/[^0-9.]/g, ""));
-      return isNaN(n) ? 0 : n;
-    }
-    const n = Number(v);
-    return isNaN(n) ? 0 : n;
-  };
-
-  const target = parseAmount(campaign?.targetAmount);
-  const collected = parseAmount(campaign?.amountCollected);
   const progressPct =
     target > 0 ? Math.min(100, Math.round((collected / target) * 100)) : 0;
 
@@ -232,9 +222,15 @@ function ViewCampaign() {
                   onChange={(e) => setToken(e.target.value)}
                   className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
                 >
-                  <option value="ETH">ETH</option>
-                  <option value="USDC">USDC</option>
-                  <option value="DAI">DAI</option>
+                  <option value="ETH" title="Ethereum">
+                    ETH
+                  </option>
+                  <option value="BTC" disabled title="Coming Soon">
+                    BTC
+                  </option>
+                  <option value="SOL" disabled title="Coming Soon">
+                    SOL
+                  </option>
                 </select>
               </div>
 

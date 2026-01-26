@@ -19,6 +19,7 @@ function CreateCampaign() {
     image: "",
     imageKeyword: "",
   });
+
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -65,16 +66,18 @@ function CreateCampaign() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!contract || !connectedAccount) {
       setError("Please connect your wallet to create a campaign.");
       return;
     }
-    if (!isValid) {
+
+    if (!isValid || !canSubmit) {
       setError("Please fill all required fields.");
       return;
     }
 
-    if (isCreating || isAIMakingImpactful) return; // Prevent multiple submissions
+    if (isCreating || isAIMakingImpactful || isFindingImage) return; // Prevent multiple submissions
 
     setError(null);
     setSuccess(null);
@@ -94,7 +97,6 @@ function CreateCampaign() {
 
       if (success) {
         setSuccess("Campaign created successfully!");
-
         setForm({
           title: "",
           description: "",
@@ -118,7 +120,7 @@ function CreateCampaign() {
   };
 
   const handleAIMakeImpactful = async () => {
-    if (isAIMakingImpactful) return; // Prevent multiple clicks
+    if (isAIMakingImpactful || isCreating || isFindingImage) return; // Prevent multiple clicks
 
     setAIError(null);
     setAISuccess(null);
@@ -162,7 +164,7 @@ function CreateCampaign() {
 
   const handleFindImage = async (keyword) => {
     try {
-      if (isFindingImage) return;
+      if (isFindingImage || isCreating || isAIMakingImpactful) return;
 
       setIsFindingImage(true);
       setFindImageError(null);

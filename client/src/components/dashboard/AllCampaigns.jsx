@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import CampaignCard from "../common/CampaignCard";
 import { CampaignsContext } from "../../contexts/CampaignsContext";
-import Loading from "../createCampaign/Loading";
+import Loading from "../common/Loading";
 
 function AllCampaigns() {
-  const { campaigns, campaignsLoading, campaignsError } =
-    useContext(CampaignsContext);
+  const { campaigns, campaignsLoading } = useContext(CampaignsContext);
 
   if (campaignsLoading) {
     return <Loading />;

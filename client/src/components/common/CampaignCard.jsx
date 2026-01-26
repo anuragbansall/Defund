@@ -5,17 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import formatAddress from "../../utils/formatAddress";
 
 function CampaignCard({ campaign }) {
-  const parseAmount = (v) => {
-    if (typeof v === "string") {
-      const n = parseFloat(v.replace(/[^0-9.]/g, ""));
-      return isNaN(n) ? 0 : n;
-    }
-    const n = Number(v);
-    return isNaN(n) ? 0 : n;
-  };
+  const target = campaign?.targetAmount;
+  const collected = campaign?.amountCollected;
 
-  const target = parseAmount(campaign?.targetAmount);
-  const collected = parseAmount(campaign?.amountCollected);
   const progressPct =
     target > 0 ? Math.min(100, Math.round((collected / target) * 100)) : 0;
 
@@ -26,7 +18,6 @@ function CampaignCard({ campaign }) {
       onClick={() =>
         navigate(`/campaign/${campaign.id}`, { state: { campaign } })
       }
-      state={{ campaign }}
       className="cursor-pointer group relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg transition hover:border-white/20 hover:shadow-xl"
     >
       <div className="relative">
@@ -57,13 +48,13 @@ function CampaignCard({ campaign }) {
 
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between text-xs text-zinc-400">
-            <span>
-              <span className="text-zinc-200 font-semibold">Collected:</span>{" "}
-              {collected}
+            <span className="">
+              <span className="text-zinc-200 font-semibold">Collected: </span>
+              {collected} ETH
             </span>
             <span>
-              <span className="text-zinc-200 font-semibold">Target:</span>{" "}
-              {target}
+              <span className="text-zinc-200 font-semibold">Target: </span>{" "}
+              {target} ETH
             </span>
           </div>
           <div className="relative h-2 w-full rounded-full bg-white/10 ring-1 ring-inset ring-white/10">
