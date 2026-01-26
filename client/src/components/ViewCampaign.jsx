@@ -4,6 +4,7 @@ import { FiClock, FiUser } from "react-icons/fi";
 import { WalletContext } from "../contexts/WalletContext";
 import { donateToCampaign } from "../utils/contractUtils";
 import Confetti from "react-confetti";
+import { FaEthereum } from "react-icons/fa";
 
 function ViewCampaign() {
   const location = useLocation();
@@ -127,11 +128,17 @@ function ViewCampaign() {
                 <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
                   <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300">
                     <div className="text-zinc-200 font-semibold">Target</div>
-                    <div className="truncate">{campaign.targetAmount}</div>
+                    <div className="truncate flex items-center gap-1 py-1">
+                      <FaEthereum />
+                      {campaign.targetAmount} ETH
+                    </div>
                   </div>
                   <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300">
                     <div className="text-zinc-200 font-semibold">Collected</div>
-                    <div className="truncate">{campaign.amountCollected}</div>
+                    <div className="truncate flex items-center gap-1 py-1">
+                      <FaEthereum />
+                      {campaign.amountCollected} ETH
+                    </div>
                   </div>
                   <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-zinc-300">
                     <div className="flex items-center gap-1 text-zinc-200 font-semibold">
