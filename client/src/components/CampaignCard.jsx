@@ -48,7 +48,7 @@ function CampaignCard({ campaign }) {
       </div>
 
       <div className="p-5">
-        <h2 className="text-lg font-semibold tracking-tight text-zinc-100">
+        <h2 className="text-lg font-semibold tracking-tight text-zinc-100 line-clamp-1">
           {campaign.title}
         </h2>
         <p className="mt-1 text-sm text-zinc-300 line-clamp-1">
