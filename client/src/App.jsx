@@ -8,6 +8,7 @@ import CreateCampaign from "./components/createCampaign/CreateCampaign";
 import ViewCampaign from "./components/dashboard/ViewCampaign";
 import EthereumPage from "./components/ethereum/EthereumPage";
 import WalletNotConnected from "./components/common/WalletNotConnected";
+import Home from "./components/home/Home";
 
 function App() {
   const { connectedAccount, isConnecting } = useContext(WalletContext);
@@ -20,7 +21,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<MainApplication />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-campaign" element={<CreateCampaign />} />
           <Route path="/campaign/:id" element={<ViewCampaign />} />

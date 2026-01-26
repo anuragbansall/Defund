@@ -1,14 +1,19 @@
 import React from "react";
-import { FaEthereum } from "react-icons/fa";
+import { FaEthereum, FaHome } from "react-icons/fa";
 import { MdCampaign, MdSpaceDashboard } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
 function Sidebar() {
   const sidebarItems = [
     {
+      name: "Home",
+      icon: <FaHome />,
+      link: "/",
+    },
+    {
       name: "Dashboard",
       icon: <MdSpaceDashboard />,
-      link: "/",
+      link: "/dashboard",
     },
     {
       name: "Create Campaign",
