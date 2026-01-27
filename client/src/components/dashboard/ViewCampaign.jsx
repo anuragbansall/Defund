@@ -6,6 +6,7 @@ import { donateToCampaign } from "../../utils/contractUtils";
 import Confetti from "react-confetti";
 import { FaEthereum } from "react-icons/fa";
 import { CampaignsContext } from "../../contexts/CampaignsContext";
+import MessagePopup from "../common/MessagePopup";
 
 function ViewCampaign() {
   const location = useLocation();
@@ -41,6 +42,7 @@ function ViewCampaign() {
   const handleFund = async (e) => {
     e.preventDefault();
     if (isFunding) return;
+    if (!canFund) return;
 
     setError(null);
     setSuccess(null);
@@ -80,6 +82,14 @@ function ViewCampaign() {
       }
     } finally {
       setIsFunding(false);
+    }
+  };
+
+  const handleCloseMessage = (type) => {
+    if (type === "error") {
+      setError(null);
+    } else if (type === "success") {
+      setSuccess(null);
     }
   };
 
@@ -256,10 +266,22 @@ function ViewCampaign() {
                 </select>
               </div>
 
-              {error && <p className="mt-2 text-xs text-rose-400">{error}</p>}
+              {error && (
+                <MessagePopup
+                  type="error"
+                  message={error}
+                  onClose={() => handleCloseMessage("error")}
+                  className="mt-4"
+                />
+              )}
 
               {success && (
-                <p className="mt-2 text-xs text-emerald-400">{success}</p>
+                <MessagePopup
+                  type="success"
+                  message={success}
+                  onClose={() => handleCloseMessage("success")}
+                  className="mt-4"
+                />
               )}
 
               <button

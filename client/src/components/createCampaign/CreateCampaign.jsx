@@ -6,6 +6,7 @@ import { GiArtificialIntelligence } from "react-icons/gi";
 import aiWorkerInstance from "../../api/aiWorkerInstance";
 import findPhoto from "../../utils/findPhoto";
 import CampaignCard from "../common/CampaignCard";
+import MessagePopup from "../common/MessagePopup";
 
 function CreateCampaign() {
   const { contract, connectedAccount } = useContext(WalletContext);
@@ -21,16 +22,10 @@ function CreateCampaign() {
   });
 
   const [isCreating, setIsCreating] = useState(false);
+  const [isAIMakingImpactful, setIsAIMakingImpactful] = useState(false);
+  const [isFindingImage, setIsFindingImage] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
-  const [isAIMakingImpactful, setIsAIMakingImpactful] = useState(false);
-  const [aiError, setAIError] = useState(null);
-  const [aiSuccess, setAISuccess] = useState(null);
-
-  const [isFindingImage, setIsFindingImage] = useState(false);
-  const [findImageError, setFindImageError] = useState(null);
-  const [findImageSuccess, setFindImageSuccess] = useState(null);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -137,8 +132,9 @@ function CreateCampaign() {
   const handleAIMakeImpactful = async () => {
     if (isAIMakingImpactful || isCreating || isFindingImage) return; // Prevent multiple clicks
 
-    setAIError(null);
-    setAISuccess(null);
+    setIsAIMakingImpactful(true);
+    setError(null);
+    setSuccess(null);
 
     try {
       const data = {
@@ -164,13 +160,13 @@ function CreateCampaign() {
           description: enhancedDescription || f.description,
         }));
 
-        setAISuccess("Campaign content enhanced successfully!");
+        setSuccess("Campaign content enhanced successfully!");
       } else {
-        setAIError("Failed to enhance campaign content. Please try again.");
+        setError("Failed to enhance campaign content. Please try again.");
       }
     } catch (error) {
       console.error("AI enhancement error:", error);
-      setAIError("Failed to enhance campaign content. Please try again.");
+      setError("Failed to enhance campaign content. Please try again.");
       setIsAIMakingImpactful(false);
     } finally {
       setIsAIMakingImpactful(false);
@@ -182,23 +178,31 @@ function CreateCampaign() {
       if (isFindingImage || isCreating || isAIMakingImpactful) return;
 
       setIsFindingImage(true);
-      setFindImageError(null);
-      setFindImageSuccess(null);
+      setError(null);
+      setSuccess(null);
 
       const image = await findPhoto(keyword);
 
       if (image) {
         setForm((f) => ({ ...f, image }));
-        setFindImageSuccess("Image found and set successfully!");
+        setSuccess("Image found and set successfully!");
       } else {
-        setFindImageError("No image found for the given keyword.");
+        setError("No image found for the given keyword.");
       }
     } catch (error) {
       console.error("Find image error:", error);
-      setFindImageError("Failed to find image. Please try again.");
+      setError("Failed to find image. Please try again.");
       setIsFindingImage(false);
     } finally {
       setIsFindingImage(false);
+    }
+  };
+
+  const handleCloseMessage = (type) => {
+    if (type === "error") {
+      setError(null);
+    } else if (type === "success") {
+      setSuccess(null);
     }
   };
 
@@ -344,29 +348,24 @@ function CreateCampaign() {
               </button>
             </div>
 
-            {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
+            {error && (
+              <MessagePopup
+                type="error"
+                message={error}
+                onClose={() => {
+                  handleCloseMessage("error");
+                }}
+              />
+            )}
             {success && (
-              <p className="mt-3 text-sm text-green-500">{success}</p>
-            )}
-
-            {aiError && <p className="mt-3 text-sm text-red-500">{aiError}</p>}
-            {aiSuccess && (
-              <p className="mt-3 text-sm text-green-500">{aiSuccess}</p>
-            )}
-
-            {!connectedAccount && (
-              <p className="mt-3 text-[11px] text-zinc-500">
-                Connect your wallet to continue. Your keys stay on your device;
-                no funds move without approval.
-              </p>
-            )}
-
-            {findImageError && (
-              <p className="mt-3 text-sm text-red-500">{findImageError}</p>
-            )}
-
-            {findImageSuccess && (
-              <p className="mt-3 text-sm text-green-500">{findImageSuccess}</p>
+              <MessagePopup
+                type="success"
+                message={success}
+                onClose={() => {
+                  handleCloseMessage("success");
+                }}
+                className="mt-4"
+              />
             )}
           </form>
         </div>

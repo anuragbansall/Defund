@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import EthereumPriceChart from "./EthereumPriceChart";
 import { convertEthToInr, convertInrToEth } from "../../utils/getEthPrice";
+import MessagePopup from "../common/MessagePopup";
 
 function EthereumPage() {
   const [ethAmount, setEthAmount] = useState("");
@@ -46,6 +47,12 @@ function EthereumPage() {
       setError("Conversion failed. Please try again.");
     } finally {
       setIsConverting(false);
+    }
+  };
+
+  const handleCloseMessage = (type) => {
+    if (type === "error") {
+      setError(null);
     }
   };
 
@@ -107,7 +114,14 @@ function EthereumPage() {
             {isConverting ? "Converting..." : "Convert Amount"}
           </button>
 
-          {error && <p className="mt-4 text-red-500">{error}</p>}
+          {error && (
+            <MessagePopup
+              type="error"
+              message={error}
+              onClose={() => handleCloseMessage("error")}
+              className="mt-4"
+            />
+          )}
         </form>
       </section>
     </main>
