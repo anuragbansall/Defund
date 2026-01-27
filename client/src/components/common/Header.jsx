@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 import connectToWallet from "../../utils/connectToWallet";
 import formatAddress from "../../utils/formatAddress";
 import Logo from "./Logo";
+import { GiHamburgerMenu } from "react-icons/gi";
 
-function Header() {
+function Header({ onOpenSidebar }) {
   const {
     connectedAccount,
     setConnectedAccount,
@@ -36,19 +37,19 @@ function Header() {
       <Link className="flex items-center gap-3" to="/">
         <Logo />
         <div className="leading-tight">
-          <span className="block text-lg font-semibold tracking-tight">
+          <span className="text-lg font-semibold tracking-tight hidden sm:block">
             Defund
           </span>
-          <span className="block text-xs text-zinc-400">
+          <span className="hidden text-xs text-zinc-400 sm:block">
             Secure, non-custodial by design
           </span>
         </div>
       </Link>
 
-      <div className="flex items-center gap-4">
+      <div className="items-center gap-4 hidden md:flex">
         {connectedAccount && (
           <div
-            className="hidden items-center rounded-full bg-green-100 px-3 py-1 text-xs text-gray-700 sm:flex"
+            className="flex items-center rounded-full bg-green-100 px-3 py-1 text-xs text-gray-700"
             title={connectedAccount}
           >
             <span className="mr-1 font-medium text-gray-600">User:</span>
@@ -77,6 +78,17 @@ function Header() {
             <span>Create Campaign</span>
           </Link>
         )}
+      </div>
+
+      <div className="text-2xl md:hidden">
+        <button
+          type="button"
+          aria-label="Open menu"
+          className="p-2 rounded-md hover:bg-white/10 active:bg-white/20 transition"
+          onClick={onOpenSidebar}
+        >
+          <GiHamburgerMenu />
+        </button>
       </div>
     </header>
   );
