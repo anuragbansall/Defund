@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
-import { WalletContext } from "./contexts/WalletContext";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import MainApplication from "./components/common/MainApplication";
-import Dashboard from "./components/dashboard/Dashboard";
-import CreateCampaign from "./components/createCampaign/CreateCampaign";
-import ViewCampaign from "./components/dashboard/ViewCampaign";
 import EthereumPage from "./components/ethereum/EthereumPage";
 import Home from "./components/home/Home";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import Campaigns from "./components/campaign/Campaigns";
+import CreateCampaign from "./components/campaign/CreateCampaign";
+import ViewCampaign from "./components/campaign/ViewCampaign";
 
 function App() {
   return (
@@ -17,10 +16,10 @@ function App() {
         <Route path="/" element={<MainApplication />}>
           <Route index element={<Home />} />
           <Route
-            path="/dashboard"
+            path="/campaigns"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Campaigns />
               </ProtectedRoute>
             }
           />
@@ -33,7 +32,7 @@ function App() {
             }
           />
           <Route
-            path="/campaign/:id"
+            path="/campaigns/:id"
             element={
               <ProtectedRoute>
                 <ViewCampaign />

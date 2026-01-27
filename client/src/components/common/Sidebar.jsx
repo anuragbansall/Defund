@@ -1,5 +1,6 @@
 import React from "react";
 import { FaEthereum, FaHome } from "react-icons/fa";
+import { IoIosCreate } from "react-icons/io";
 import { MdCampaign, MdSpaceDashboard } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
@@ -11,13 +12,13 @@ function Sidebar() {
       link: "/",
     },
     {
-      name: "Dashboard",
-      icon: <MdSpaceDashboard />,
-      link: "/dashboard",
+      name: "Campaigns",
+      icon: <MdCampaign />,
+      link: "/campaigns",
     },
     {
       name: "Create Campaign",
-      icon: <MdCampaign />,
+      icon: <IoIosCreate />,
       link: "/create-campaign",
     },
     {
