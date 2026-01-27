@@ -1,5 +1,5 @@
 import React, { useState, useContext, useMemo } from "react";
-import { useLocation, useParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { FiClock, FiUser } from "react-icons/fi";
 import { WalletContext } from "../../contexts/WalletContext";
 import { donateToCampaign } from "../../utils/contractUtils";
@@ -7,19 +7,19 @@ import Confetti from "react-confetti";
 import { FaEthereum } from "react-icons/fa";
 import { CampaignsContext } from "../../contexts/CampaignsContext";
 import MessagePopup from "../common/MessagePopup";
+import Loading from "../common/Loading";
 
 function ViewCampaign() {
-  const location = useLocation();
   const { id } = useParams();
   const { connectedAccount, contract } = useContext(WalletContext);
-  const { campaigns } = useContext(CampaignsContext);
+  const { campaigns, campaignsLoading } = useContext(CampaignsContext);
 
   const campaignFromList = useMemo(
     () => campaigns.find((c) => String(c.id) === String(id)),
     [campaigns, id],
   );
 
-  const campaign = campaignFromList || location.state?.campaign || null;
+  const campaign = campaignFromList || null;
 
   const target = campaign?.targetAmount;
   const collected = campaign?.amountCollected;
@@ -92,6 +92,10 @@ function ViewCampaign() {
       setSuccess(null);
     }
   };
+
+  if (campaignsLoading) {
+    return <Loading />;
+  }
 
   if (!campaign) {
     return (
@@ -200,9 +204,12 @@ function ViewCampaign() {
                 </div>
 
                 {isFundingGoalReached && (
-                  <div className="mt-4 rounded-lg bg-emerald-600/20 p-3 text-center text-sm text-emerald-300 ring-1 ring-emerald-300/20">
-                    🎉 This campaign has reached its funding goal!
-                  </div>
+                  <MessagePopup
+                    type="success"
+                    message="🎉 Funding goal reached! Thank you to all contributors."
+                    onClose={() => handleCloseMessage("success")}
+                    className="mt-6"
+                  />
                 )}
 
                 <div className="mt-6 flex items-center gap-3 text-sm text-zinc-300">

@@ -15,9 +15,7 @@ function CampaignCard({ campaign }) {
 
   return (
     <div
-      onClick={() =>
-        navigate(`/campaign/${campaign.id}`, { state: { campaign } })
-      }
+      onClick={() => navigate(`/campaign/${campaign.id}`)}
       className="cursor-pointer group relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg transition hover:border-white/20 hover:shadow-xl"
     >
       <div className="relative">

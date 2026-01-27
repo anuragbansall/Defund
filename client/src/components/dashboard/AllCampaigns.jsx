@@ -19,7 +19,7 @@ function AllCampaigns() {
       {campaigns.length > 0 ? (
         <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-x-3 gap-y-6 place-items-center">
           {campaigns.map((campaign, index) => (
-            <CampaignCard key={index} campaign={{ ...campaign, id: index }} />
+            <CampaignCard key={index} campaign={{ ...campaign }} />
           ))}
         </div>
       ) : (

@@ -7,6 +7,7 @@ function Loading() {
       <span className="text-6xl animate-bounce opacity-50 text-zinc-400">
         <FaEthereum />
       </span>
+      <p className="sr-only">Loading...</p>
     </main>
   );
 }
