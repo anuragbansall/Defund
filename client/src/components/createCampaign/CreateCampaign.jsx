@@ -113,8 +113,22 @@ function CreateCampaign() {
       }
     } catch (error) {
       console.error("Error creating campaign:", error);
-      setError("Failed to create campaign. Please try again.");
-      setIsCreating(false);
+
+      if (error.code === "ACTION_REJECTED") {
+        setError("Transaction was rejected by the user.");
+      }
+
+      if (error.code === "INSUFFICIENT_FUNDS") {
+        setError("Insufficient funds to complete the transaction.");
+      }
+
+      const rspMsg = error?.info?.error?.message || error.message || null;
+
+      if (rspMsg) {
+        setError(`Error: ${rspMsg}`);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsCreating(false);
     }

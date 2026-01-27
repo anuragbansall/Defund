@@ -1,17 +1,24 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import { FiClock, FiUser } from "react-icons/fi";
 import { WalletContext } from "../../contexts/WalletContext";
 import { donateToCampaign } from "../../utils/contractUtils";
 import Confetti from "react-confetti";
 import { FaEthereum } from "react-icons/fa";
+import { CampaignsContext } from "../../contexts/CampaignsContext";
 
 function ViewCampaign() {
   const location = useLocation();
   const { id } = useParams();
   const { connectedAccount, contract } = useContext(WalletContext);
+  const { campaigns } = useContext(CampaignsContext);
 
-  const campaign = location.state?.campaign || null;
+  const campaignFromList = useMemo(
+    () => campaigns.find((c) => String(c.id) === String(id)),
+    [campaigns, id],
+  );
+
+  const campaign = campaignFromList || location.state?.campaign || null;
 
   const target = campaign?.targetAmount;
   const collected = campaign?.amountCollected;
@@ -27,7 +34,7 @@ function ViewCampaign() {
 
   const canFund = Boolean(connectedAccount) && amount && parseFloat(amount) > 0;
 
-  const isFundingGoalReached = collected >= target;
+  const isFundingGoalReached = campaign?.isCompleted || collected >= target;
 
   console.log("Funding goal reached:", isFundingGoalReached);
 
@@ -52,12 +59,27 @@ function ViewCampaign() {
       if (success) {
         setSuccess(`Funded ${amount} ${token} to the campaign.`);
         setAmount("");
-      } else {
-        setError("Failed to fund the campaign.");
       }
     } catch (error) {
-      console.error("Error funding campaign:", error);
-      setError("An error occurred while funding the campaign.");
+      if (error.code === "INSUFFICIENT_FUNDS") {
+        setError("Insufficient funds in your wallet.");
+        return;
+      }
+
+      if (error.code === "ACTION_REJECTED") {
+        setError("Transaction rejected in wallet.");
+        return;
+      }
+
+      const rspMsg = error?.info?.error?.message || error.message || null;
+
+      if (rspMsg) {
+        setError(`Transaction failed: ${rspMsg}`);
+      } else {
+        setError("Transaction failed. Please try again.");
+      }
+    } finally {
+      setIsFunding(false);
     }
   };
 

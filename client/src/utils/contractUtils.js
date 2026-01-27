@@ -14,7 +14,7 @@ export const createCampaign = async (contract, contractData) => {
     return true;
   } catch (error) {
     console.error("Error creating campaign:", error);
-    return false;
+    throw error;
   }
 };
 
@@ -28,7 +28,7 @@ export const donateToCampaign = async (contract, campaignId, amount) => {
     return true;
   } catch (error) {
     console.error("Error donating to campaign:", error);
-    return false;
+    throw error;
   }
 };
 
@@ -64,6 +64,28 @@ export const getCampaigns = async (contract) => {
   } catch (error) {
     console.error("Error fetching campaigns:", error);
     return [];
+  }
+};
+
+export const getCampaignById = async (contract, campaignId) => {
+  try {
+    const c = await contract.campaigns(campaignId);
+
+    return {
+      id: Number(c.id),
+      owner: c.owner,
+      title: c.title,
+      description: c.description,
+      targetAmount: formatUnits(c.target, "ether"),
+      deadline: Number(c.deadline) * 1000,
+      amountCollected: formatUnits(c.amountCollected, "ether"),
+      image: c.image,
+      isCompleted: Boolean(c.isCompleted),
+      category: "General",
+    };
+  } catch (error) {
+    console.error("Error fetching campaign by id:", error);
+    return null;
   }
 };
 
