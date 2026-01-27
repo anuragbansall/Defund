@@ -3,7 +3,6 @@ import { ethers, formatUnits, parseEther } from "ethers";
 export const createCampaign = async (contract, contractData) => {
   try {
     const tx = await contract.createCampaign(
-      contractData.owner,
       contractData.title,
       contractData.description,
       contractData.target,
@@ -47,19 +46,19 @@ export const getCampaigns = async (contract) => {
   try {
     const tx = await contract.getCampaigns();
 
-    const campaigns = tx.map((campaign, i) => ({
+    const campaigns = tx.map((campaign) => ({
+      id: Number(campaign.id),
       owner: campaign.owner,
       title: campaign.title,
       description: campaign.description,
       targetAmount: formatUnits(campaign.target, "ether"),
-      deadline: Number(campaign.deadline),
+      // Convert seconds to milliseconds for JS Date
+      deadline: Number(campaign.deadline) * 1000,
       amountCollected: formatUnits(campaign.amountCollected, "ether"),
       image: campaign.image,
+      isCompleted: Boolean(campaign.isCompleted),
       category: "General",
     }));
-
-    console.log(tx[2]);
-    console.log(tx[2].amountCollected);
 
     return campaigns;
   } catch (error) {
@@ -70,7 +69,7 @@ export const getCampaigns = async (contract) => {
 
 export const getNumberOfCampaigns = async (contract) => {
   try {
-    const tx = await contract.getNumberOfCampaigns();
+    const tx = await contract.numberOfCampaigns();
     return tx.toNumber();
   } catch (error) {
     console.error("Error fetching number of campaigns:", error);

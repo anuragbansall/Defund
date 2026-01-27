@@ -11,7 +11,6 @@ function WalletNotConnected() {
     isConnecting,
     connectError,
     setConnectError,
-    setOwner,
     setContract,
   } = useContext(WalletContext);
 
@@ -23,8 +22,6 @@ function WalletNotConnected() {
       const { address, contract } = await connectToWallet();
       setConnectedAccount(address);
       setContract(contract);
-      const ownerAddress = await contract.owner();
-      setOwner(ownerAddress);
       setIsConnecting(false);
     } catch (error) {
       setConnectError(error.message);

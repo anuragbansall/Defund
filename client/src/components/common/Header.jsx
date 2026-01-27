@@ -13,9 +13,7 @@ function Header() {
     setConnectedAccount,
     setIsConnecting,
     setConnectError,
-    setOwner,
     setContract,
-    owner,
   } = useContext(WalletContext);
 
   const handleConnectWallet = async () => {
@@ -26,8 +24,6 @@ function Header() {
       const { address, contract } = await connectToWallet();
       setConnectedAccount(address);
       setContract(contract);
-      const ownerAddress = await contract.owner();
-      setOwner(ownerAddress);
       setIsConnecting(false);
     } catch (error) {
       setConnectError(error.message);
@@ -57,15 +53,6 @@ function Header() {
           >
             <span className="mr-1 font-medium text-gray-600">User:</span>
             <span className="font-mono">{formatAddress(connectedAccount)}</span>
-          </div>
-        )}
-        {owner && (
-          <div
-            className="hidden items-center rounded-full bg-green-100 px-3 py-1 text-xs text-gray-700 sm:flex"
-            title={owner}
-          >
-            <span className="mr-1 font-medium text-gray-600">Owner:</span>
-            <span className="font-mono">{formatAddress(owner)}</span>
           </div>
         )}
 

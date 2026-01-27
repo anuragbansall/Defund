@@ -6,7 +6,6 @@ const WalletContext = createContext(null);
 function WalletProvider({ children }) {
   const [connectedAccount, setConnectedAccount] = useState(null);
   const [contract, setContract] = useState(null);
-  const [owner, setOwner] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectError, setConnectError] = useState(null);
 
@@ -19,9 +18,6 @@ function WalletProvider({ children }) {
         const { address, contract } = await connectToWallet();
         setConnectedAccount(address);
         setContract(contract);
-
-        const ownerAddress = await contract.owner();
-        setOwner(ownerAddress);
       } catch (error) {
         setConnectError(error.message);
       } finally {
@@ -39,8 +35,6 @@ function WalletProvider({ children }) {
         setConnectedAccount,
         contract,
         setContract,
-        owner,
-        setOwner,
         isConnecting,
         setIsConnecting,
         connectError,

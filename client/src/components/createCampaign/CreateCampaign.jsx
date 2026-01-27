@@ -86,12 +86,13 @@ function CreateCampaign() {
       setIsCreating(true);
       const deadlineTimestamp = new Date(form.deadline).getTime();
 
+      const deadlineTimestampSec = Math.floor(deadlineTimestamp / 1000);
+
       const success = await createCampaign(contract, {
-        owner: connectedAccount,
         title: form.title,
         description: form.description,
         target: parseEther(form.targetAmount),
-        deadline: deadlineTimestamp,
+        deadline: deadlineTimestampSec,
         image: form.image,
       });
 
