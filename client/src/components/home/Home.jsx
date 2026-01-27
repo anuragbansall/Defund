@@ -41,10 +41,7 @@ function Home() {
     <div className="h-full w-full space-y-10">
       {/* Hero */}
       <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 md:p-10 shadow-xl bg-[url('/hero-section-bg.jpg')] bg-cover bg-center z-0">
-        <div className="absolute inset-0 bg-black/20 -z-1 backdrop-blur-sm">
-          {/* overlay */}
-          {/* overlay */}
-        </div>
+        <div className="absolute inset-0 bg-black/20 -z-1 backdrop-blur-sm"></div>
 
         <div className="pointer-events-none absolute inset-0 z-10 opacity-30">
           <div className="absolute -top-32 -left-24 h-72 w-72 rounded-full bg-emerald-500/40 blur-3xl" />
@@ -90,7 +87,7 @@ function Home() {
               {stats.totalTarget.toFixed(2)} ETH
             </div>
           </div>
-          <div className="rounded-xl border border-white/10 bg-[#1C1C24]/60 p-4">
+          <div className="rounded-xl border border-white/10 bg-[#1C1C24]/60 p-4 col-span-2">
             <div className="text-xs text-zinc-400">Overall Progress</div>
             <div className="mt-3 h-2 w-full rounded-full bg-white/10 ring-1 ring-inset ring-white/10">
               <div
