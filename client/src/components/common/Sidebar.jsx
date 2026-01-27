@@ -38,7 +38,7 @@ function Sidebar({ variant = "desktop", onClose }) {
             <button
               type="button"
               aria-label="Close menu"
-              className="p-2 rounded-md hover:bg-white/10 active:bg-white/20 transition"
+              className="p-2 rounded-md hover:bg-white/10 active:bg-white/20 transition cursor-pointer"
               onClick={onClose}
             >
               <IoClose className="text-2xl" />

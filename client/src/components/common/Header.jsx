@@ -84,7 +84,7 @@ function Header({ onOpenSidebar }) {
         <button
           type="button"
           aria-label="Open menu"
-          className="p-2 rounded-md hover:bg-white/10 active:bg-white/20 transition"
+          className="p-2 rounded-md hover:bg-white/10 active:bg-white/20 transition cursor-pointer"
           onClick={onOpenSidebar}
         >
           <GiHamburgerMenu />
