@@ -64,7 +64,7 @@ function Home() {
               <span>Start a Campaign</span>
             </Link>
             <Link
-              to="/"
+              to="/campaigns"
               className="px-6 py-3 rounded ring-1 ring-white/10 bg-white/5 hover:bg-white/10 transition text-white text-center"
             >
               Explore Campaigns
@@ -187,7 +187,7 @@ function Home() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-semibold">Featured Campaigns</h2>
           <Link
-            to="/"
+            to="/campaigns"
             className="text-sm text-emerald-300 hover:text-emerald-200"
           >
             View all
