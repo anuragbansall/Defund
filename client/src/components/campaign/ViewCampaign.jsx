@@ -103,10 +103,10 @@ function ViewCampaign() {
         <div className="rounded-xl border border-white/10 bg-white/5 p-6 text-center text-zinc-300">
           <p className="mb-3">No campaign data found for ID {id}.</p>
           <Link
-            to="/dashboard"
+            to="/"
             className="primary-button inline-flex rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white"
           >
-            Back to Dashboard
+            Back to Home
           </Link>
         </div>
       </div>
